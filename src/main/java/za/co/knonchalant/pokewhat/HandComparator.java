@@ -1,16 +1,17 @@
 package za.co.knonchalant.pokewhat;
 
-import za.co.knonchalant.pokewhat.domain.EHand;
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
 import za.co.knonchalant.pokewhat.domain.Hand;
 import za.co.knonchalant.pokewhat.domain.HandResult;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HandComparator {
-    public static List<HandResult> compare(List<Hand> hands) {
+    public static List<HandResult> compare(Collection<Hand> hands) {
         ArrayList<HandResult> handResults = new ArrayList<>();
 
         for (Hand hand : hands) {

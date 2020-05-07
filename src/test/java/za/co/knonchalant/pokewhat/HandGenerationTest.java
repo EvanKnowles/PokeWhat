@@ -3,7 +3,7 @@ package za.co.knonchalant.pokewhat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import za.co.knonchalant.pokewhat.domain.Card;
-import za.co.knonchalant.pokewhat.domain.EHand;
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
 import za.co.knonchalant.pokewhat.domain.Hand;
 import za.co.knonchalant.pokewhat.domain.HandResult;
 
@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static za.co.knonchalant.pokewhat.domain.ERank.*;
-import static za.co.knonchalant.pokewhat.domain.ESuit.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ERank.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ESuit.*;
 
 public class HandGenerationTest {
 

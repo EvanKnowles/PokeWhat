@@ -1,5 +1,6 @@
-package za.co.knonchalant.pokewhat.domain;
+package za.co.knonchalant.pokewhat.domain.lookup;
 
+import za.co.knonchalant.pokewhat.domain.HandResult;
 import za.co.knonchalant.pokewhat.tie.NOfAKindTieResolver;
 import za.co.knonchalant.pokewhat.tie.HighCardTieResolver;
 import za.co.knonchalant.pokewhat.tie.ITieResolver;

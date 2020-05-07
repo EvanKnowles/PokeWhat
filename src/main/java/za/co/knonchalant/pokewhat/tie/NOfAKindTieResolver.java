@@ -1,6 +1,6 @@
 package za.co.knonchalant.pokewhat.tie;
 
-import za.co.knonchalant.pokewhat.domain.ERank;
+import za.co.knonchalant.pokewhat.domain.lookup.ERank;
 import za.co.knonchalant.pokewhat.domain.Hand;
 import za.co.knonchalant.pokewhat.domain.HandResult;
 

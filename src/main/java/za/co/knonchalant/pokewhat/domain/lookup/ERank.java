@@ -1,9 +1,28 @@
-package za.co.knonchalant.pokewhat.domain;
+package za.co.knonchalant.pokewhat.domain.lookup;
+
+import za.co.knonchalant.pokewhat.domain.Card;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public enum ERank {
-    ONE(1, "1"), TWO(2, "2"), THREE(3, "3"), FOUR(4, "4"), FIVE(5, "5"),
+    TWO(2, "2"), THREE(3, "3"), FOUR(4, "4"), FIVE(5, "5"),
     SIX(6, "6"), SEVEN(7, "7"), EIGHT(8, "8"), NINE(9, "9"), TEN(10, "10"),
     JACK(11, "J"), QUEEN(12, "Q"), KING(13, "K"), ACE(14, "A");
+
+    public static final List<Card> FULL_DECK;
+
+    static {
+        ArrayList<Card> buildDeck = new ArrayList<>();
+        for (ERank value : values()) {
+            for (ESuit suit : ESuit.values()) {
+                buildDeck.add(value.of(suit));
+            }
+        }
+
+        FULL_DECK = Collections.unmodifiableList(buildDeck);
+    }
 
     private final int numeric;
     private final String name;

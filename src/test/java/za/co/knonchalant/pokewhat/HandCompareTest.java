@@ -8,8 +8,8 @@ import za.co.knonchalant.pokewhat.domain.HandResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import static za.co.knonchalant.pokewhat.domain.ERank.*;
-import static za.co.knonchalant.pokewhat.domain.ESuit.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ERank.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ESuit.*;
 
 public class HandCompareTest {
 

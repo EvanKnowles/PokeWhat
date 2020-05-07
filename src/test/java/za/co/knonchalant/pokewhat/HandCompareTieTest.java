@@ -2,16 +2,16 @@ package za.co.knonchalant.pokewhat;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import za.co.knonchalant.pokewhat.domain.EHand;
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
 import za.co.knonchalant.pokewhat.domain.Hand;
 import za.co.knonchalant.pokewhat.domain.HandResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static za.co.knonchalant.pokewhat.domain.ERank.*;
-import static za.co.knonchalant.pokewhat.domain.ESuit.*;
-import static za.co.knonchalant.pokewhat.domain.ESuit.SPADES;
+import static za.co.knonchalant.pokewhat.domain.lookup.ERank.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ESuit.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ESuit.SPADES;
 
 public class HandCompareTieTest {
     @Test
@@ -33,8 +33,8 @@ public class HandCompareTieTest {
     public void testHighCardTie() {
         List<Hand> handArrayList = new ArrayList<>();
 
-        Hand one = new Hand(FOUR.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), ONE.of(HEARTS), EIGHT.of(SPADES));
-        Hand two = new Hand(FIVE.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), ONE.of(HEARTS), EIGHT.of(SPADES));
+        Hand one = new Hand(FOUR.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), SEVEN.of(HEARTS), EIGHT.of(SPADES));
+        Hand two = new Hand(FIVE.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), SEVEN.of(HEARTS), EIGHT.of(SPADES));
 
 
         handArrayList.add(one);
@@ -49,8 +49,8 @@ public class HandCompareTieTest {
     public void testHighCardActualTie() {
         List<Hand> handArrayList = new ArrayList<>();
 
-        Hand one = new Hand(FOUR.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), ONE.of(HEARTS), EIGHT.of(SPADES));
-        Hand two = new Hand(FOUR.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), ONE.of(HEARTS), EIGHT.of(SPADES));
+        Hand one = new Hand(FOUR.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), SEVEN.of(HEARTS), EIGHT.of(SPADES));
+        Hand two = new Hand(FOUR.of(CLUBS), THREE.of(DIAMONDS), TWO.of(SPADES), SEVEN.of(HEARTS), EIGHT.of(SPADES));
 
         handArrayList.add(one);
         handArrayList.add(two);
@@ -85,7 +85,7 @@ public class HandCompareTieTest {
     public void testThreeOfAKindTie() {
         List<Hand> handArrayList = new ArrayList<>();
 
-        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), ONE.of(HEARTS), TWO.of(SPADES));
+        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), SEVEN.of(HEARTS), TWO.of(SPADES));
         Hand two = new Hand(FIVE.of(CLUBS), FIVE.of(DIAMONDS), FIVE.of(SPADES), TWO.of(HEARTS), THREE.of(SPADES));
 
         handArrayList.add(one);
@@ -163,7 +163,7 @@ public class HandCompareTieTest {
     public void testTwoOfAKindTie() {
         List<Hand> handArrayList = new ArrayList<>();
 
-        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FIVE.of(SPADES), ONE.of(HEARTS), TWO.of(SPADES));
+        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FIVE.of(SPADES), SEVEN.of(HEARTS), TWO.of(SPADES));
         Hand two = new Hand(FIVE.of(CLUBS), FIVE.of(DIAMONDS), FOUR.of(SPADES), TWO.of(HEARTS), EIGHT.of(SPADES));
 
         handArrayList.add(one);
@@ -179,7 +179,7 @@ public class HandCompareTieTest {
     public void testTwoOfAKindHighCardTie() {
         List<Hand> handArrayList = new ArrayList<>();
 
-        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FIVE.of(SPADES), ONE.of(HEARTS), TWO.of(SPADES));
+        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FIVE.of(SPADES), SEVEN.of(HEARTS), TWO.of(SPADES));
         Hand two = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), TWO.of(HEARTS), EIGHT.of(SPADES));
 
         handArrayList.add(one);
@@ -195,8 +195,8 @@ public class HandCompareTieTest {
     public void testThreeOfAKindHighCardTie() {
         List<Hand> handArrayList = new ArrayList<>();
 
-        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), ONE.of(HEARTS), TWO.of(SPADES));
-        Hand two = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), TWO.of(HEARTS), THREE.of(SPADES));
+        Hand one = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), SEVEN.of(HEARTS), TWO.of(SPADES));
+        Hand two = new Hand(FOUR.of(CLUBS), FOUR.of(DIAMONDS), FOUR.of(SPADES), TWO.of(HEARTS), EIGHT.of(SPADES));
 
         handArrayList.add(one);
         handArrayList.add(two);
@@ -235,8 +235,8 @@ public class HandCompareTieTest {
 
         List<HandResult> compare = HandComparator.compare(handArrayList);
 
-        Assertions.assertEquals(compare.get(1).getHand(), one);
-        Assertions.assertEquals(compare.get(1).getHandResult(), EHand.STRAIGHT_FLUSH);
+        Assertions.assertEquals(one, compare.get(1).getHand());
+        Assertions.assertEquals(EHand.STRAIGHT_FLUSH, compare.get(1).getHandResult());
     }
 
 

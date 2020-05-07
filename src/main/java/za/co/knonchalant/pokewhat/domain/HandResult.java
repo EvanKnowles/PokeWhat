@@ -1,5 +1,7 @@
 package za.co.knonchalant.pokewhat.domain;
 
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
+
 public class HandResult {
     private Hand hand;
     private EHand handResult;

@@ -1,6 +1,9 @@
 package za.co.knonchalant.pokewhat;
 
 import za.co.knonchalant.pokewhat.domain.*;
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
+import za.co.knonchalant.pokewhat.domain.lookup.ERank;
+import za.co.knonchalant.pokewhat.domain.lookup.ESuit;
 
 import java.util.Map;
 import java.util.Set;

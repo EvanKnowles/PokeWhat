@@ -1,4 +1,6 @@
-package za.co.knonchalant.pokewhat.domain;
+package za.co.knonchalant.pokewhat.domain.lookup;
+
+import za.co.knonchalant.pokewhat.domain.Card;
 
 public enum ESuit {
     SPADES("♠"), CLUBS("♣"), HEARTS("♥"), DIAMONDS("♦");

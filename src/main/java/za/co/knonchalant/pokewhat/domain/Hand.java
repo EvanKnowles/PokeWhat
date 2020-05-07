@@ -1,5 +1,8 @@
 package za.co.knonchalant.pokewhat.domain;
 
+import za.co.knonchalant.pokewhat.domain.lookup.ERank;
+import za.co.knonchalant.pokewhat.domain.lookup.ESuit;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;

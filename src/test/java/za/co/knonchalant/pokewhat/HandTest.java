@@ -2,11 +2,11 @@ package za.co.knonchalant.pokewhat;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import za.co.knonchalant.pokewhat.domain.EHand;
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
 import za.co.knonchalant.pokewhat.domain.Hand;
 
-import static za.co.knonchalant.pokewhat.domain.ERank.*;
-import static za.co.knonchalant.pokewhat.domain.ESuit.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ERank.*;
+import static za.co.knonchalant.pokewhat.domain.lookup.ESuit.*;
 
 public class HandTest {
 

@@ -1,6 +1,6 @@
 package za.co.knonchalant.pokewhat.tie;
 
-import za.co.knonchalant.pokewhat.domain.ERank;
+import za.co.knonchalant.pokewhat.domain.lookup.ERank;
 import za.co.knonchalant.pokewhat.domain.Hand;
 import za.co.knonchalant.pokewhat.domain.HandResult;
 
@@ -54,7 +54,7 @@ public class CardComboTieResolver implements ITieResolver {
     }
 
     private ERank getHighestRankOfMatchingCards(Hand hand, int numberOfCards, ERank... ignore) {
-        ERank rank = ERank.ONE;
+        ERank rank = ERank.TWO;
         List<ERank> ignoredRanks = Arrays.asList(ignore);
 
         for (Map.Entry<ERank, Long> ranksByCount : hand.getRankCount().entrySet()) {
