@@ -219,8 +219,8 @@ public class HandCompareTieTest {
 
         List<HandResult> compare = HandComparator.compare(handArrayList);
 
-        Assertions.assertEquals(compare.get(1).getHand(), one);
-        Assertions.assertEquals(compare.get(1).getHandResult(), EHand.STRAIGHT);
+        Assertions.assertEquals(one, compare.get(1).getHand());
+        Assertions.assertEquals(EHand.STRAIGHT, compare.get(1).getHandResult());
     }
 
     @Test

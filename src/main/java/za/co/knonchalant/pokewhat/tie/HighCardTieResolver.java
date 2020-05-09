@@ -23,6 +23,22 @@ public class HighCardTieResolver implements ITieResolver {
             input.getHand().sortCards();
         }
 
+        removeMatchingNumbersFromTop(inputs);
+
+        inputs.sort(Comparator.comparingInt(this::getHighestCard));
+
+        int highestCard = getHighestCard(inputs.get(0));
+
+        for (HandResult input : inputs) {
+            if (getHighestCard(input) == highestCard) {
+                input.setTieBreakWinner(true);
+            }
+        }
+
+        return inputs;
+    }
+
+    private void removeMatchingNumbersFromTop(List<HandResult> inputs) {
         for (int cardIndex = 0; cardIndex < NUMBER_OF_CARDS; cardIndex++) {
             ERank theNumber = null;
             for (int i = 0; i < inputs.size(); i++) {
@@ -42,21 +58,9 @@ public class HighCardTieResolver implements ITieResolver {
                 ignoreList.add(theNumber);
             }
         }
-
-        inputs.sort(Comparator.comparingInt(this::getRank));
-
-        int rank = getRank(inputs.get(0));
-
-        for (HandResult input : inputs) {
-            if (getRank(input) == rank) {
-                input.setTieBreakWinner(true);
-            }
-        }
-
-        return inputs;
     }
 
-    private int getRank(HandResult h) {
+    private int getHighestCard(HandResult h) {
         List<Card> cards = h.getHand().getCards();
 
         for (Card card : cards) {

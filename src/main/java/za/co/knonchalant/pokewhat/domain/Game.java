@@ -15,17 +15,15 @@ public class Game {
 
     private final List<Player> players = new ArrayList<>();
     private final Map<Player, Hand> playerHands = new HashMap<>();
+    private final List<RoundBets> roundBets = new ArrayList<>();
+
+    private Hand openCards;
+    private Deck deck;
 
     private final double blind;
 
-    private RoundBets roundBets;
-
-    private Hand openCards;
-
     // start dealer index at -1 so the first dealer is the first joined player
     int dealerIndex = -1;
-    int currentPlayerIndex;
-    private Deck deck;
 
     public Game(double blind) {
         this.blind = blind;
@@ -60,7 +58,6 @@ public class Game {
 
             playerHands.put(player, hand);
         }
-
     }
 
     public GameState start() {
@@ -81,7 +78,6 @@ public class Game {
         }
 
         dealerIndex = incrementPlayerIndex(dealerIndex);
-        currentPlayerIndex = incrementPlayerIndex(dealerIndex);
 
         advanceGameState();
         newBettingRound();
@@ -90,15 +86,14 @@ public class Game {
     }
 
     public void setupBlinds() {
-        if (roundBets != null) {
+        if (currentBets() != null) {
             return;
         }
 
         int bigIndex = incrementPlayerIndex(dealerIndex);
         int smallIndex = incrementPlayerIndex(bigIndex);
 
-        roundBets = new RoundBets(players.size(), blind, players.get(bigIndex), players.get(smallIndex));
-        currentPlayerIndex = smallIndex;
+        roundBets.add(new RoundBets(blind, players.get(bigIndex), players.get(smallIndex), players));
     }
 
     private void advanceGameState() {
@@ -109,11 +104,39 @@ public class Game {
     }
 
     private void newBettingRound() {
-        if (roundBets.isRoundDone()) {
-            currentPlayerIndex = incrementPlayerIndex(dealerIndex);
+        RoundBets roundBets = currentBets();
 
-            roundBets.next();
+        if (roundBets == null) {
+            setupBlinds();
+        } else {
+            if (roundBets.isRoundDone()) {
+                List<Player> activeAfterRound = roundBets.getActiveAfterRound();
+
+                Player nextPlayer = getFirstActivePlayer(activeAfterRound);
+
+                roundBets.next(nextPlayer);
+                activeAfterRound = roundBets.getActiveAfterRound();
+
+                if (roundBets.isAllIn() && activeAfterRound.size() != 1) {
+                    this.roundBets.add(new RoundBets(activeAfterRound, nextPlayer));
+                }
+            }
         }
+    }
+
+    private Player getFirstActivePlayer(List<Player> activeAfterRound) {
+        Player nextPlayer = null;
+        if (activeAfterRound.size() != 1) {
+            int nextIndex = dealerIndex + 1;
+            while (nextPlayer == null) {
+                nextPlayer = players.get(nextIndex % players.size());
+                if (!activeAfterRound.contains(nextPlayer)) {
+                    nextPlayer = null;
+                    nextIndex++;
+                }
+            }
+        }
+        return nextPlayer;
     }
 
     private int incrementPlayerIndex(int currentIndex) {
@@ -134,7 +157,7 @@ public class Game {
         do {
             state = state.advance();
 
-            if(state != null) {
+            if (state != null) {
                 for (int j = 0; j < state.getCardsToReveal(); j++) {
                     currentCards.add(allCards.get(cardIndex));
                     cardIndex++;
@@ -146,6 +169,12 @@ public class Game {
     }
 
     public EBetResult bet(Player player, double betAmount) {
+        RoundBets roundBets = currentBets();
+
+        if (roundBets == null) {
+            return EBetResult.OUT_OF_TURN;
+        }
+
         if (currentRoundDone()) {
             return EBetResult.OUT_OF_TURN;
         }
@@ -154,16 +183,25 @@ public class Game {
             return EBetResult.OUT_OF_TURN;
         }
 
-        currentPlayerIndex = incrementPlayerIndex(currentPlayerIndex);
-        return currentBets().placeBet(player, betAmount);
+        return roundBets.placeBet(player, betAmount);
     }
 
     public boolean currentRoundDone() {
-        return currentBets().isRoundDone();
+        RoundBets roundBets = currentBets();
+
+        if (roundBets == null) {
+            return false;
+        }
+
+        return roundBets.isRoundDone();
     }
 
     private RoundBets currentBets() {
-        return roundBets;
+        if (roundBets.isEmpty()) {
+            return null;
+        }
+
+        return roundBets.get(roundBets.size() - 1);
     }
 
     public EGameState getState() {
@@ -175,7 +213,7 @@ public class Game {
     }
 
     public Player getCurrentPlayer() {
-        return players.get(currentPlayerIndex);
+        return currentBets().getCurrentPlayer();
     }
 
     public int getPlayerCount() {
@@ -183,7 +221,9 @@ public class Game {
     }
 
     public GameState nextRound() {
-        if (!currentBets().isRoundDone()) {
+        RoundBets roundBets = currentBets();
+
+        if (roundBets == null || !roundBets.isRoundDone()) {
             return buildGameState();
         }
 
@@ -221,5 +261,15 @@ public class Game {
         }
 
         return new GameResult(winningPlayers);
+    }
+
+    public double getCurrentPool() {
+        RoundBets roundBets = currentBets();
+
+        if (roundBets == null) {
+            return 0;
+        }
+
+        return roundBets.getTotalBetPool();
     }
 }
