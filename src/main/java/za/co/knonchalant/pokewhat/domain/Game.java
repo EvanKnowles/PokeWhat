@@ -4,6 +4,7 @@ import za.co.knonchalant.pokewhat.HandComparator;
 import za.co.knonchalant.pokewhat.HandGeneration;
 import za.co.knonchalant.pokewhat.domain.lookup.EBetResult;
 import za.co.knonchalant.pokewhat.domain.lookup.EGameState;
+import za.co.knonchalant.pokewhat.domain.lookup.EHand;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,6 +18,8 @@ public class Game {
     private final Map<Player, Hand> playerHands = new HashMap<>();
     private final List<RoundBets> roundBets = new ArrayList<>();
 
+    private final List<Player> folded = new ArrayList<>();
+
     private Hand openCards;
     private Deck deck;
 
@@ -27,6 +30,12 @@ public class Game {
 
     public Game(double blind) {
         this.blind = blind;
+        deck = new Deck();
+    }
+
+    public Game(double blind, Deck deck) {
+        this.blind = blind;
+        this.deck = deck;
     }
 
     private EGameState gameState = EGameState.WAITING_FOR_PLAYERS;
@@ -69,7 +78,6 @@ public class Game {
             return buildGameState();
         }
 
-        deck = new Deck();
         openCards = new Hand();
         for (int number : STAGES) {
             for (int i = 0; i < number; i++) {
@@ -97,6 +105,10 @@ public class Game {
     }
 
     private void advanceGameState() {
+        if (gameState == EGameState.DONE) {
+            return;
+        }
+
         gameState = gameState.advance();
         if (gameState != null) {
             gameState.event(this);
@@ -111,6 +123,11 @@ public class Game {
         } else {
             if (roundBets.isRoundDone()) {
                 List<Player> activeAfterRound = roundBets.getActiveAfterRound();
+
+                if (activeAfterRound.isEmpty() || activeAfterRound.size() == 1) {
+                    gameState = EGameState.DONE;
+                    return;
+                }
 
                 Player nextPlayer = getFirstActivePlayer(activeAfterRound);
 
@@ -183,7 +200,13 @@ public class Game {
             return EBetResult.OUT_OF_TURN;
         }
 
-        return roundBets.placeBet(player, betAmount);
+        EBetResult eBetResult = roundBets.placeBet(player, betAmount);
+
+        if (eBetResult == EBetResult.FOLDED) {
+            folded.add(player);
+        }
+
+        return eBetResult;
     }
 
     public boolean currentRoundDone() {
@@ -213,7 +236,12 @@ public class Game {
     }
 
     public Player getCurrentPlayer() {
-        return currentBets().getCurrentPlayer();
+        RoundBets roundBets = currentBets();
+        if (roundBets == null) {
+            return null;
+        }
+
+        return roundBets.getCurrentPlayer();
     }
 
     public int getPlayerCount() {
@@ -221,6 +249,10 @@ public class Game {
     }
 
     public GameState nextRound() {
+        if (gameState == EGameState.DONE) {
+            return buildGameState();
+        }
+
         RoundBets roundBets = currentBets();
 
         if (roundBets == null || !roundBets.isRoundDone()) {
@@ -252,6 +284,12 @@ public class Game {
 
     private GameResult getGameResultForPlayers(RoundBets roundBets) {
         List<Player> inGamePlayers = roundBets.getInGamePlayers();
+
+        inGamePlayers.removeAll(folded);
+
+        if (inGamePlayers.size() == 1) {
+            return new GameResult(Collections.singletonMap(inGamePlayers.get(0), new HandResult(null, EHand.FOLD)), roundBets.getDescription(), roundBets.getTotalBetPool());
+        }
 
         Map<Hand, Player> bestHands = new HashMap<>();
         for (Player player : inGamePlayers) {
