@@ -11,12 +11,16 @@ public class RoundBets {
     private final Map<Player, EBetResult> results = new HashMap<>();
     private final List<Player> allInPlayers = new ArrayList<>();
     private final List<Player> activePlayers;
+    private final List<Player> foldedPlayers = new ArrayList<>();
 
+    private final String potName;
     private double currentBet;
+    private double totalBets;
     private boolean allIn;
     private int currentPlayerIndex;
 
     public RoundBets(double blind, Player big, Player little, List<Player> activePlayers) {
+        potName = "Main";
         this.activePlayers = activePlayers;
         for (Player activePlayer : activePlayers) {
             results.put(activePlayer, EBetResult.NOT_BETTED);
@@ -27,11 +31,18 @@ public class RoundBets {
         playerBet(big, bigBlind);
         playerBet(little, blind);
 
+        totalBets = sumOfCurrentBets();
+
         this.currentBet = bigBlind;
         this.currentPlayerIndex = activePlayers.indexOf(little);
     }
 
+    private double sumOfCurrentBets() {
+        return bets.values().stream().mapToDouble(Double::doubleValue).sum();
+    }
+
     public RoundBets(List<Player> activeAfterRound, Player firstPlayer) {
+        potName = "Side";
         this.activePlayers = activeAfterRound;
         this.currentPlayerIndex = activeAfterRound.indexOf(firstPlayer);
         for (Player activePlayer : activePlayers) {
@@ -50,6 +61,7 @@ public class RoundBets {
         double playerTotal = bet + getPlayerBet(player);
         if (!goingAllIn && playerTotal < currentBet) {
             results.put(player, EBetResult.FOLDED);
+            foldedPlayers.add(player);
             return EBetResult.FOLDED;
         }
 
@@ -80,6 +92,7 @@ public class RoundBets {
     private void playerBet(Player player, double bet) {
         player.loseMoney(bet);
         bets.put(player, bet + getPlayerBet(player));
+        totalBets += bet;
     }
 
     private Double getPlayerBet(Player player) {
@@ -103,28 +116,17 @@ public class RoundBets {
             }
         }
 
-
-//        if (bettingPlayers.size() == 1) {
-//            return true;
-//        }
-//
-//        if (results.size() != bettingPlayers.size()) {
-//            return false;
-//        }
-//
-//        for (Map.Entry<Player, Double> playerDoubleEntry : bets.entrySet()) {
-//            if (playerDoubleEntry.getValue() < currentBet) {
-//                if (results.get(playerDoubleEntry.getKey()) != EBetResult.FOLDED) {
-//                    return false;
-//                }
-//            }
-//        }
-
         return true;
     }
 
     private List<Player> getBettingPlayers() {
         return activePlayers.stream().filter(a -> !results.get(a).isOutOfGame()).collect(Collectors.toList());
+    }
+
+    public List<Player> getInGamePlayers() {
+        ArrayList<Player> players = new ArrayList<>(activePlayers);
+        players.removeAll(foldedPlayers);
+        return players;
     }
 
     private EBetResult playerResult(EBetResult result, Player player) {
@@ -175,7 +177,7 @@ public class RoundBets {
     }
 
     public double getTotalBetPool() {
-        return bets.values().stream().mapToDouble(Double::doubleValue).sum();
+        return totalBets;
     }
 
     public boolean isAllIn() {
@@ -186,7 +188,15 @@ public class RoundBets {
         return getBettingPlayers();
     }
 
+    public List<Player> getActiveForRound() {
+        return getBettingPlayers();
+    }
+
     public Player getCurrentPlayer() {
         return activePlayers.get(currentPlayerIndex);
+    }
+
+    public String getDescription() {
+        return potName;
     }
 }

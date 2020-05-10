@@ -107,9 +107,11 @@ public class FullGameTest {
         Assertions.assertEquals(5, done.getCurrentCards().size());
         Assertions.assertEquals(EGameState.DONE, game.getState());
 
-        GameResult result = game.getResult();
-        System.out.println("Winners:");
-        System.out.println(result.getWinners());
+        List<GameResult> results = game.getResult();
+        for (GameResult result : results) {
+            System.out.println("Winners:");
+            System.out.println(result.getWinners());
+        }
     }
 
     @Test
@@ -195,8 +197,10 @@ public class FullGameTest {
         Assertions.assertEquals(5, done.getCurrentCards().size());
         Assertions.assertEquals(EGameState.DONE, game.getState());
 
-        GameResult result = game.getResult();
-        System.out.println("Winners:");
-        System.out.println(result.getWinners());
+        List<GameResult> results = game.getResult();
+        for (GameResult result : results) {
+            System.out.println("Winners of " + result.getDescription() + " pot:");
+            System.out.println(result.getWinners());
+        }
     }
 }

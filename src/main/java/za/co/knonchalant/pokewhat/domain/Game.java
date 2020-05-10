@@ -237,13 +237,24 @@ public class Game {
         return playerHands.get(playerOne);
     }
 
-    public GameResult getResult() {
+    public List<GameResult> getResult() {
         if (gameState != EGameState.DONE) {
             return null;
         }
 
+        List<GameResult> results = new ArrayList<>();
+        for (RoundBets roundBet : roundBets) {
+            results.add(getGameResultForPlayers(roundBet));
+        }
+
+        return results;
+    }
+
+    private GameResult getGameResultForPlayers(RoundBets roundBets) {
+        List<Player> inGamePlayers = roundBets.getInGamePlayers();
+
         Map<Hand, Player> bestHands = new HashMap<>();
-        for (Player player : players) {
+        for (Player player : inGamePlayers) {
             Hand best = HandGeneration.getBest(openCards.getCards(), playerHands.get(player).getCards());
             bestHands.put(best, player);
         }
@@ -260,7 +271,7 @@ public class Game {
             winningPlayers.put(bestHands.get(topRankedHand.getHand()), topRankedHand);
         }
 
-        return new GameResult(winningPlayers);
+        return new GameResult(winningPlayers, roundBets.getDescription(), roundBets.getTotalBetPool());
     }
 
     public double getCurrentPool() {
