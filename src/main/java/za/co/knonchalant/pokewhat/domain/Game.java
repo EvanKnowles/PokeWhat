@@ -125,7 +125,9 @@ public class Game {
                 List<Player> activeAfterRound = roundBets.getActiveAfterRound();
 
                 if (activeAfterRound.isEmpty() || activeAfterRound.size() == 1) {
-                    gameState = EGameState.DONE;
+                    while (gameState != EGameState.DONE) {
+                        advanceGameState();
+                    }
                     return;
                 }
 
