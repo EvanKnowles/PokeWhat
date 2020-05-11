@@ -32,6 +32,6 @@ public class HandResult {
 
     @Override
     public String toString() {
-        return handResult.getName();
+        return handResult.getName() + ": " + hand;
     }
 }

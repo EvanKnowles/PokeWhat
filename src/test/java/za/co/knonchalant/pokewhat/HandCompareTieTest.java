@@ -78,7 +78,7 @@ public class HandCompareTieTest {
 
         List<HandResult> compare = HandComparator.compare(handArrayList);
 
-        Assertions.assertEquals(compare.get(1).getHand(), one);
+        Assertions.assertEquals(compare.get(0).getHand(), two);
     }
 
     @Test
@@ -203,8 +203,8 @@ public class HandCompareTieTest {
 
         List<HandResult> compare = HandComparator.compare(handArrayList);
 
-        Assertions.assertEquals(compare.get(1).getHand(), one);
-        Assertions.assertEquals(compare.get(1).getHandResult(), EHand.THREE_OF_KIND);
+        Assertions.assertEquals(compare.get(0).getHand(), two);
+        Assertions.assertEquals(compare.get(0).getHandResult(), EHand.THREE_OF_KIND);
     }
 
     @Test

@@ -21,4 +21,12 @@ public class Player {
     public void loseMoney(double bet) {
         money -= bet;
     }
+
+    public void win(double amount) {
+        money += amount;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

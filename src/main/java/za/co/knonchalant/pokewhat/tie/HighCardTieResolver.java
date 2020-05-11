@@ -21,6 +21,7 @@ public class HighCardTieResolver implements ITieResolver {
     public List<HandResult> resolve(List<HandResult> inputs) {
         for (HandResult input : inputs) {
             input.getHand().sortCards();
+            input.setTieBreakWinner(false);
         }
 
         removeMatchingNumbersFromTop(inputs);
@@ -45,7 +46,7 @@ public class HighCardTieResolver implements ITieResolver {
                 if (i == 0) {
                     theNumber = inputs.get(i).getHand().getCardRank(cardIndex);
                 } else {
-                    if (theNumber != inputs.get(i).getHand().getCardRank(cardIndex)) {
+                    if (theNumber.getNumeric() != inputs.get(i).getHand().getCardRank(cardIndex).getNumeric()) {
                         theNumber = null;
                         break;
                     }

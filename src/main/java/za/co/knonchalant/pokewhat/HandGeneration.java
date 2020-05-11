@@ -6,6 +6,7 @@ import za.co.knonchalant.pokewhat.domain.HandResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HandGeneration {
     private static final int HAND_CARDS = 5;
@@ -16,7 +17,13 @@ public class HandGeneration {
 
         List<Hand> generate = generate(cards);
         List<HandResult> compare = HandComparator.compare(generate);
-        return compare.get(0).getHand();
+
+        List<HandResult> topRankedHands = compare.stream().filter(c -> c.getHandResult() == compare.get(0).getHandResult()).collect(Collectors.toList());
+        if (topRankedHands.size() > 1) {
+            topRankedHands = topRankedHands.stream().filter(HandResult::isTieBreakWinner).collect(Collectors.toList());
+        }
+
+        return topRankedHands.get(0).getHand();
     }
 
     private static List<Hand> generate(List<Card> cards) {

@@ -93,6 +93,16 @@ public class Game {
         return buildGameState();
     }
 
+    public Map<Player, Double> getBets() {
+        RoundBets roundBets = currentBets();
+
+        if (roundBets == null) {
+            return Collections.emptyMap();
+        }
+
+        return roundBets.getBets();
+    }
+
     public void setupBlinds() {
         if (currentBets() != null) {
             return;
@@ -230,6 +240,10 @@ public class Game {
         return roundBets.get(roundBets.size() - 1);
     }
 
+    public double getCurrentBet() {
+        return currentBets().getCurrentBet();
+    }
+
     public EGameState getState() {
         return gameState;
     }
@@ -252,6 +266,10 @@ public class Game {
     }
 
     public GameState nextRound() {
+        if (gameState == EGameState.WAITING_FOR_PLAYERS || gameState == EGameState.NOT_STARTED) {
+            return buildGameState();
+        }
+
         if (gameState == EGameState.DONE) {
             return buildGameState();
         }
@@ -327,5 +345,9 @@ public class Game {
         }
 
         return roundBets.getTotalBetPool();
+    }
+
+    public double getBlind() {
+        return blind;
     }
 }

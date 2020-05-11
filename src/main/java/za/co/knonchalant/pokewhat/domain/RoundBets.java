@@ -53,6 +53,10 @@ public class RoundBets {
         this.totalBets = sumOfCurrentBets();
     }
 
+    public Map<Player, Double> getBets() {
+        return bets;
+    }
+
     public RoundBets(List<Player> activeAfterRound, Player firstPlayer) {
         this.potName = "Side";
         this.bets = new HashMap<>();
@@ -252,5 +256,9 @@ public class RoundBets {
         resultingBets.add(new RoundBets(bets, "Side"));
 
         return resultingBets;
+    }
+
+    public double getCurrentBet() {
+        return currentBet;
     }
 }

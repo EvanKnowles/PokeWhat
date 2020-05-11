@@ -26,6 +26,23 @@ public class HandGenerationTest {
     }
 
     @Test
+    public void testTieOnLowHighCardPair() {
+        //Table cards: [A♦, J♠, 4♣, 4♠, 3♠]
+        //Player Two:[6♦, 7♠]
+        //Player One:[10♥, 7♦]
+        //There's a tie for the Main Pot: Player One and Player Two win 4.0with 1 Pair
+        List<Card> commonCards = Arrays.asList(ACE.of(DIAMONDS), JACK.of(SPADES), FOUR.of(CLUBS), FOUR.of(SPADES), THREE.of(SPADES));
+
+        List<Card> playerOne = Arrays.asList(SIX.of(DIAMONDS), SEVEN.of(SPADES));
+        List<Card> playerTwo = Arrays.asList(TEN.of(HEARTS), SEVEN.of(DIAMONDS));
+        Hand playerOneHand = HandGeneration.getBest(commonCards, playerOne);
+        Hand playerTwoHand = HandGeneration.getBest(commonCards, playerTwo);
+
+        List<HandResult> compare = HandComparator.compare(Arrays.asList(playerOneHand, playerTwoHand));
+        System.out.println(compare);
+    }
+
+    @Test
     public void testGame() {
         List<Card> commonCards = Arrays.asList(FOUR.of(CLUBS), FIVE.of(DIAMONDS), TWO.of(SPADES), THREE.of(HEARTS), NINE.of(SPADES));
 

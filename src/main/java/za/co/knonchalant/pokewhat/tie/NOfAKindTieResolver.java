@@ -29,10 +29,16 @@ public class NOfAKindTieResolver implements ITieResolver {
 
         // if we have more than one hand with the same rank four of a kind, check high card
         if (topMatchingResults.size() > 1) {
-            List<HandResult> highCardResolve = new HighCardTieResolver(rankOfMatchingCards).resolve(topMatchingResults);
-            inputs.removeAll(highCardResolve);
-            inputs.addAll(0, highCardResolve);
-            return inputs;
+            HighCardTieResolver highCardTieResolver = new HighCardTieResolver(rankOfMatchingCards);
+            List<HandResult> pre = topMatchingResults;
+            List<HandResult> highCardResolve = highCardTieResolver.resolve(topMatchingResults).stream().filter(HandResult::isTieBreakWinner).collect(Collectors.toList());
+
+            while (pre.size() != highCardResolve.size()) {
+                pre = highCardResolve;
+                highCardResolve = highCardTieResolver.resolve(highCardResolve).stream().filter(HandResult::isTieBreakWinner).collect(Collectors.toList());
+            }
+
+            return highCardResolve;
         }
 
         inputs.remove(topMatchingResults.get(0));
