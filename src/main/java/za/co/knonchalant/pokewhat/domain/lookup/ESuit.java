@@ -5,7 +5,7 @@ import za.co.knonchalant.pokewhat.domain.Card;
 public enum ESuit {
     SPADES("♠"), CLUBS("♣"), HEARTS("♥"), DIAMONDS("♦");
 
-    private String picture;
+    private final String picture;
 
     ESuit(String picture) {
         this.picture = picture;

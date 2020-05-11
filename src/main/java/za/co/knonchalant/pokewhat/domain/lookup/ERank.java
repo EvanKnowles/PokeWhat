@@ -40,10 +40,6 @@ public enum ERank {
         return numeric;
     }
 
-    public double getPositionForCardRank() {
-        return Math.pow(2, numeric * 4);
-    }
-
     @Override
     public String toString() {
         return name;

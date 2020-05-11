@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Hand {
-    private List<Card> cards = new ArrayList<>(5);
+    private final List<Card> cards = new ArrayList<>(5);
 
     public Hand() {
     }

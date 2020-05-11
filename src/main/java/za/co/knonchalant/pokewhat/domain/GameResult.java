@@ -3,8 +3,6 @@ package za.co.knonchalant.pokewhat.domain;
 import java.util.Map;
 
 public class GameResult {
-    private String message;
-
     private Map<Player, HandResult> winners;
     private String description;
     private double amount;
@@ -19,10 +17,6 @@ public class GameResult {
         return winners;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -30,5 +24,4 @@ public class GameResult {
     public double getAmountPerPlayer() {
         return amount / winners.size();
     }
-
 }

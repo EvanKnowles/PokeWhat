@@ -212,10 +212,6 @@ public class RoundBets {
         return getBettingPlayers();
     }
 
-    public List<Player> getActiveForRound() {
-        return getBettingPlayers();
-    }
-
     public Player getCurrentPlayer() {
         return activePlayers.get(currentPlayerIndex);
     }
