@@ -128,6 +128,7 @@ public class Game {
                     while (gameState != EGameState.DONE) {
                         advanceGameState();
                     }
+                    roundBets.next(null);
                     return;
                 }
 
@@ -277,8 +278,12 @@ public class Game {
         }
 
         List<GameResult> results = new ArrayList<>();
+
         for (RoundBets roundBet : roundBets) {
-            results.add(getGameResultForPlayers(roundBet));
+            List<RoundBets> normalized = roundBet.normalize();
+            for (RoundBets bets : normalized) {
+                results.add(getGameResultForPlayers(bets));
+            }
         }
 
         return results;
