@@ -110,7 +110,10 @@ public class RoundBets {
 
     private void advancePlayerIndex() {
         Player nextPlayer = null;
-        while (nextPlayer == null || (results.get(nextPlayer) != null && results.get(nextPlayer).isOutOfGame())) {
+        int startingIndex = currentPlayerIndex;
+        boolean first = true;
+        while ((startingIndex != currentPlayerIndex || first) && (nextPlayer == null || (results.get(nextPlayer) != null && results.get(nextPlayer).isOutOfGame()))) {
+            first = false;
             currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
             nextPlayer = activePlayers.get(currentPlayerIndex);
         }
