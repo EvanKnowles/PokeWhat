@@ -222,6 +222,15 @@ public class Game {
         return eBetResult;
     }
 
+    public void fold(Player player) {
+        RoundBets roundBets = currentBets();
+        if (roundBets == null) {
+            return;
+        }
+
+        roundBets.fold(player);
+    }
+
     public boolean currentRoundDone() {
         RoundBets roundBets = currentBets();
 
@@ -241,7 +250,12 @@ public class Game {
     }
 
     public double getCurrentBet() {
-        return currentBets().getCurrentBet();
+        RoundBets roundBets = currentBets();
+        if (roundBets == null) {
+            return 0.0;
+        }
+        
+        return roundBets.getCurrentBet();
     }
 
     public EGameState getState() {

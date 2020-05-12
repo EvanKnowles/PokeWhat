@@ -4,7 +4,6 @@ import za.co.knonchalant.pokewhat.domain.lookup.EBetResult;
 import za.co.knonchalant.pokewhat.exceptions.ShouldNotHaveHappenedException;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class RoundBets {
@@ -32,7 +31,9 @@ public class RoundBets {
         double bigBlind = 2 * blind;
 
         playerBet(big, bigBlind);
+        results.put(big, EBetResult.BLIND);
         playerBet(little, blind);
+        results.put(little, EBetResult.BLIND);
 
         totalBets = sumOfCurrentBets();
 
@@ -83,18 +84,13 @@ public class RoundBets {
 
         double playerTotal = bet + getPlayerBet(player);
         if (!goingAllIn && playerTotal < currentBet) {
-            results.put(player, EBetResult.FOLDED);
-            foldedPlayers.add(player);
+            fold(player);
             return EBetResult.FOLDED;
         }
 
         playerBet(player, bet);
 
-        Player nextPlayer = null;
-        while (nextPlayer == null || (results.get(nextPlayer) != null && results.get(nextPlayer).isOutOfGame())) {
-            currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
-            nextPlayer = activePlayers.get(currentPlayerIndex);
-        }
+        advancePlayerIndex();
 
         if (playerTotal >= currentBet && bet == 0) {
             return playerResult(EBetResult.CHECKED, player);
@@ -110,6 +106,26 @@ public class RoundBets {
         }
 
         throw new ShouldNotHaveHappenedException("Player total was unlike the bet in any way.");
+    }
+
+    private void advancePlayerIndex() {
+        Player nextPlayer = null;
+        while (nextPlayer == null || (results.get(nextPlayer) != null && results.get(nextPlayer).isOutOfGame())) {
+            currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
+            nextPlayer = activePlayers.get(currentPlayerIndex);
+        }
+    }
+
+    /**
+     * Special fold for special occasions like the player leaving the game
+     */
+    public void fold(Player player) {
+        results.put(player, EBetResult.FOLDED);
+        foldedPlayers.add(player);
+
+        if (getCurrentPlayer() == player) {
+            advancePlayerIndex();
+        }
     }
 
     private void playerBet(Player player, double bet) {
@@ -134,10 +150,14 @@ public class RoundBets {
             return true;
         }
 
-        List<Player> bettingPlayers = getBettingPlayers();
+        List<Player> bettingPlayers = activePlayers.stream().filter(a -> results.get(a) != EBetResult.FOLDED).collect(Collectors.toList());
+        if (bettingPlayers.size() == 1) {
+            return true;
+        }
 
         for (Player bettingPlayer : bettingPlayers) {
-            if (results.get(bettingPlayer) == EBetResult.NOT_BETTED || bets.get(bettingPlayer) < currentBet) {
+            EBetResult playerResult = results.get(bettingPlayer);
+            if (playerResult == EBetResult.NOT_BETTED || playerResult == EBetResult.BLIND || (playerResult != EBetResult.ALL_IN && bets.get(bettingPlayer) < currentBet)) {
                 return false;
             }
         }

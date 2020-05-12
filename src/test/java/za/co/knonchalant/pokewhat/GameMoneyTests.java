@@ -111,6 +111,39 @@ public class GameMoneyTests {
         printResults(results);
     }
 
+    @Test
+    public void testTwoPlayersFoldImmediately() {
+        Player playerOne = new Player("Player One", 20);
+        Player playerTwo = new Player("Player Two", 30);
+
+        Game game = new Game(1d);
+        game.addPlayer(playerOne);
+        game.addPlayer(playerTwo);
+
+        game.start();
+        assertEquals(3d, game.getCurrentPool());
+
+        // start bets for blinds
+        assertEquals(EBetResult.FOLDED, game.bet(playerOne, 0));
+        assertEquals(19, playerOne.getMoney());
+        Assertions.assertTrue(game.currentRoundDone());
+
+        assertEquals(EBetResult.OUT_OF_TURN, game.bet(playerTwo, 0));
+        assertEquals(28, playerTwo.getMoney());
+
+        assertEquals(3d, game.getCurrentPool());
+
+        Assertions.assertTrue(game.currentRoundDone());
+        GameState gameState = game.nextRound();
+
+        Assertions.assertSame(EGameState.DONE, gameState.getState());
+
+        List<GameResult> results = game.getResult();
+        Assertions.assertEquals(playerTwo, getWinner(results, 0));
+
+        printResults(results);
+    }
+
     private void printResults(List<GameResult> results) {
         for (GameResult result : results) {
             System.out.println("Winners of " + result.getDescription() + " pot:");
