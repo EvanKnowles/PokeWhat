@@ -365,6 +365,10 @@ public class Game {
         return roundBets.getTotalBetPool();
     }
 
+    public GameState getGameState() {
+        return buildGameState();
+    }
+
     public double getBlind() {
         return blind;
     }
