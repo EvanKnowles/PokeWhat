@@ -4,9 +4,36 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>za.co.knonchalant.pokewhat</groupId>
+  <groupId>za.co.knowles.pokewhat</groupId>
   <artifactId>poke-what-sdk</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
+
+  <name>PokeWhat SDK</name>
+  <description>An SDK providing for simulating a poker game.</description>
+  <url>https://www.knowles.co.za/pokewhat</url>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Evan Knowles</name>
+      <email>evan@knowles.co.za</email>
+      <organization>Knowles</organization>
+      <organizationUrl>http://www.knowles.co.za</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/EvanKnowles/PokeWhat.git</connection>
+    <developerConnection>scm:git:ssh://github.com:EvanKnowles/PokeWhat.git</developerConnection>
+    <url>https://github.com/EvanKnowles/PokeWhat/tree/master</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>
@@ -17,6 +44,30 @@
           <source>8</source>
           <target>8</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
