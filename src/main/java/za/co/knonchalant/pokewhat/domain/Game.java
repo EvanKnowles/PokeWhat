@@ -229,6 +229,10 @@ public class Game {
         }
 
         roundBets.fold(player);
+
+        while (currentRoundDone() && gameState != EGameState.DONE) {
+            nextRound();
+        }
     }
 
     public boolean currentRoundDone() {
@@ -254,7 +258,7 @@ public class Game {
         if (roundBets == null) {
             return 0.0;
         }
-        
+
         return roundBets.getCurrentBet();
     }
 

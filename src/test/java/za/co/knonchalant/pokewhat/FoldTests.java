@@ -31,9 +31,7 @@ public class FoldTests {
         game.fold(playerTwo);
 
         Assertions.assertTrue(game.currentRoundDone());
-        GameState gameState = game.nextRound();
-
-        Assertions.assertSame(EGameState.DONE, gameState.getState());
+        Assertions.assertSame(EGameState.DONE, game.getState());
 
         List<GameResult> results = game.getResult();
         Assertions.assertEquals(playerOne, getWinner(results, 0));
